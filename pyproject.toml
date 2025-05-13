@@ -6,6 +6,7 @@ readme = "README.md"
 authors = [
     { name = "fnrir", email = "fnr1r0@protonmail.com" }
 ]
+license = "GPL"
 requires-python = ">=3.13"
 dependencies = [
     "toml>=0.10.2",

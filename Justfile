@@ -21,6 +21,9 @@ alias typecheck := mypy
 flake8:
     -uv run flake8 {{SRC_DIR}}
 
+isort:
+    -uv run isort {{SRC_DIR}}
+
 mypy:
     -uv run mypy {{SRC_DIR}} --check-untyped-defs
 

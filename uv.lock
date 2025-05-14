@@ -79,6 +79,19 @@ wheels = [
 ]
 
 [[package]]
+name = "flake8-isort"
+version = "6.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flake8" },
+    { name = "isort" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7c/ea/2f2662d4fefa6ab335c7119cb28e5bc57c935a86a69a7f72df3ea5fe7b2c/flake8_isort-6.1.2.tar.gz", hash = "sha256:9d0452acdf0e1cd6f2d6848e3605e66b54d920e73471fb4744eef0f93df62d5d", size = 17756, upload-time = "2025-01-29T12:29:25.753Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/10/295e982874f2a94f309baf7c45f852a191c87d59bd846b1701332303783f/flake8_isort-6.1.2-py3-none-any.whl", hash = "sha256:549197dedf0273502fb74f04c080beed9e62a7eb70244610413d27052e78bd3b", size = 18385, upload-time = "2025-01-29T12:29:23.46Z" },
+]
+
+[[package]]
 name = "inquirer"
 version = "3.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -266,6 +279,8 @@ config-tui = [
 ]
 dev = [
     { name = "flake8" },
+    { name = "flake8-isort" },
+    { name = "isort" },
     { name = "mypy" },
     { name = "pylint" },
     { name = "types-toml" },
@@ -278,6 +293,8 @@ requires-dist = [{ name = "toml", specifier = ">=0.10.2" }]
 config-tui = [{ name = "inquirer", specifier = ">=3.4.0" }]
 dev = [
     { name = "flake8", specifier = ">=7.2.0" },
+    { name = "flake8-isort", specifier = ">=6.1.2" },
+    { name = "isort", specifier = ">=6.0.1" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pylint", specifier = ">=3.3.7" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },

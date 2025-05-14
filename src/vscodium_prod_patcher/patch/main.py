@@ -1,3 +1,4 @@
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -41,15 +42,11 @@ def patch_marketplace_trusted_domains(product: dict[str, Any]):
     except KeyError:
         cur_domains = []
     for domain in EXTENSIONS_OPENVSX_TRUSTED:
-        try:
+        with suppress(ValueError):
             cur_domains.remove(domain)
-        except ValueError:
-            pass
     if not cur_domains:
-        try:
+        with suppress(KeyError):
             product.pop(TDKEY)
-        except KeyError:
-            pass
     else:
         product[TDKEY] = cur_domains
 
@@ -95,7 +92,7 @@ def patch_pkgs(packages: list[str]):
     changed_packages = [
         pkg
         for pkg in packages
-        if pkg in conf_packages.keys()
+        if pkg in conf_packages
     ]
     for pkg in changed_packages:
         pacinfo("Patching", pkg)

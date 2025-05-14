@@ -4,5 +4,5 @@ CONFIG_TEMPLATE = {
         "extensions_source": "openvsx",
         "extra_features": False,
         "use_xdg": False,
-    }
+    },
 }

@@ -35,7 +35,7 @@ def main():
     parser_hook = subparsers.add_parser("hook", help="Run a hook")
     parser_hook.add_argument("name", help="Hook name")
     parser_patch = subparsers.add_parser(
-        "patch", help="Manually patch a VSCodium installation"
+        "patch", help="Manually patch a VSCodium installation",
     )
     parser_patch.add_argument(
         "editor_path", type=Path,

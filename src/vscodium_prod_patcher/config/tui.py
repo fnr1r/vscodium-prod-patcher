@@ -83,7 +83,7 @@ def config_features():
             + " XDG?",
             FRIENDLY_BOOL_STRS,
             default=friendly_bool_to_str(features["use_xdg"]),
-        )
+        ),
     ]
     answers_maybe = inquirer.prompt(questions)
     assert answers_maybe is not None

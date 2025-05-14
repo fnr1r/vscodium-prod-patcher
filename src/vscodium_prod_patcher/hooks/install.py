@@ -36,7 +36,6 @@ def hook_install():
         pacinfo(
             "No VSCodium package defined.",
             f"Try running `{NAME} config packages`",
-            CONFIG_PATH,
         )
         return
     targets = "\n".join([

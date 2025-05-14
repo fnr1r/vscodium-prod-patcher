@@ -33,6 +33,27 @@ def patch_data_dir(product: dict[str, Any], config: dict[str, Any]):
     product["dataFolderName"] = ".local/share/vscodium"
 
 
+def patch_marketplace_trusted_domains(product: dict[str, Any]):
+    TDKEY = "linkProtectionTrustedDomains"
+    cur_domains: list[str]
+    try:
+        cur_domains = product[TDKEY]
+    except KeyError:
+        cur_domains = []
+    for domain in EXTENSIONS_OPENVSX_TRUSTED:
+        try:
+            cur_domains.remove(domain)
+        except ValueError:
+            pass
+    if not cur_domains:
+        try:
+            product.pop(TDKEY)
+        except KeyError:
+            pass
+    else:
+        product[TDKEY] = cur_domains
+
+
 def patch_marketplace(product: dict[str, Any], config: dict[str, Any]):
     try:
         marketplace = config["extensions_source"]
@@ -51,15 +72,8 @@ def patch_marketplace(product: dict[str, Any], config: dict[str, Any]):
             return
     if gallery:
         product["extensionsGallery"] = gallery
-    tdkey = "linkProtectionTrustedDomains"
     if domains_remove:
-        cur_domains: list[str] = product[tdkey]
-        for domain in EXTENSIONS_OPENVSX_TRUSTED:
-            cur_domains.remove(domain)
-        if not cur_domains:
-            product.pop(tdkey)
-        else:
-            product[tdkey] = cur_domains
+        patch_marketplace_trusted_domains(product)
 
 
 def patch_pkg(pkg: str, editor_path: Path, config: dict[str, Any]):

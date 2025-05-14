@@ -20,9 +20,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
+config-tui = [
+    "inquirer>=3.4.0",
+]
 dev = [
     "flake8>=7.2.0",
     "mypy>=1.15.0",
     "pylint>=3.3.7",
     "types-toml>=0.10.8.20240310",
 ]
+
+[[tool.mypy.overrides]]
+module = ["inquirer.*"]
+follow_untyped_imports = true

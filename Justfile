@@ -4,7 +4,7 @@ build:
     python -m build --wheel --no-isolation
 
 clean:
-    rm -r dist
+    -rm -r dist
 
 check: mypy pylint flake8
 

@@ -25,7 +25,7 @@ from .shared import err
 
 
 def main():
-    argv = sys.argv
+    argv = sys.argv.copy()
     argv.pop(0)
     match argv.pop(0):
         case "hook":

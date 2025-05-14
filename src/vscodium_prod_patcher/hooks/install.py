@@ -1,11 +1,23 @@
 import os
+from pathlib import Path
+import sys
 
 from ..config import CONFIG_PATH, get_config
 from ..consts import NAME
 from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
 from ..shared import (
-    HOOKS_DIR, HOOK_FILE, pacinfo, text_file_write,
+    HOOKS_DIR, HOOK_FILE, eprint, pacinfo, text_file_write,
 )
+
+
+USUAL_BIN_PATH = Path("/usr/bin") / NAME
+
+
+def get_bin_path() -> Path:
+    bin_path = Path(sys.argv[0])
+    if bin_path != USUAL_BIN_PATH:
+        eprint("Warning:", NAME, "binary is in a non-standard path:", bin_path)
+    return bin_path.absolute()
 
 
 def hook_install():
@@ -24,7 +36,9 @@ def hook_install():
         HOOK_TARGET_TEMPLATE.format(pkg=pkg)
         for pkg in packages.keys()
     ])
+    bin_path = get_bin_path()
     hook_contents = HOOK_TEMPLATE.format(
+        bin=bin_path,
         name=NAME, targets=targets,
     )
     HOOKS_DIR.mkdir(parents=True, exist_ok=True)

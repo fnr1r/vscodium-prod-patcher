@@ -1,4 +1,4 @@
-from .cmd import pacman_list_packages_cmd
+from .command import pacman_list_packages_cmd
 from .minipacman import MiniPacman
 
 

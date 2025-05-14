@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 import sys
 
-from ..config import CONFIG_PATH, get_config
+from ..config import get_config
+from ..config.paths import CONFIG_PATH
 from ..consts import NAME
 from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
 from ..shared import (

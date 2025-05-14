@@ -20,6 +20,7 @@ IP address: [::1]
 
 from argparse import ArgumentParser
 
+from .config.command import config_main
 from .hooks.main import hooks_main
 from .shared import err
 
@@ -27,10 +28,14 @@ from .shared import err
 def main():
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
+    parser_config = subparsers.add_parser("config")
+    parser_config.add_argument("subcommand")
     parser_hook = subparsers.add_parser("hook", help="Run a hook")
     parser_hook.add_argument("name", help="Hook name")
     args = parser.parse_args()
     match args.command:
+        case "config":
+            config_main(args)
         case "hook":
             hooks_main(args)
         case _:

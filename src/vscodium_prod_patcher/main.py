@@ -20,16 +20,15 @@ IP address: [::1]
 
 import sys
 
-from .hook import install_hook
-from .patch import patch_pkgs
+from .hooks.main import hooks_main
 from .shared import err
 
 
 def main():
-    match sys.argv[1]:
+    argv = sys.argv
+    argv.pop(0)
+    match argv.pop(0):
         case "hook":
-            install_hook()
-        case "patch":
-            patch_pkgs()
+            hooks_main(argv)
         case _:
             err("bad command")

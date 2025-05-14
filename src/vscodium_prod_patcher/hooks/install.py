@@ -1,14 +1,14 @@
 import os
 
-from .config import CONFIG_PATH, get_config
-from .consts import NAME
-from .hook_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
-from .shared import (
+from ..config import CONFIG_PATH, get_config
+from ..consts import NAME
+from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
+from ..shared import (
     HOOKS_DIR, HOOK_FILE, pacinfo, text_file_write,
 )
 
 
-def install_hook():
+def hook_install():
     config = get_config()
     packages: dict[str, str] = config["packages"]
     if not packages:

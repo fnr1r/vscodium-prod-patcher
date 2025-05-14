@@ -1,8 +1,6 @@
 from pathlib import Path
-import sys
 from typing import Any
 
-from .config import get_config
 from .extension_galleries import (
     EXTENSIONS_OPENVSX_GALLERY, EXTENSIONS_OPENVSX_TRUSTED,
     EXTENSIONS_MS_GALLERY,
@@ -75,22 +73,3 @@ def patch_pkg(pkg: str, editor_path: Path, config: dict[str, Any]):
     # Patch 3: Marketplace
     patch_marketplace(product, config)
     json_write(product_path, product, indent=2)
-
-
-def patch_pkgs():
-    changed_packages = [
-        str(line).strip()
-        for line in sys.stdin
-    ]
-    if not changed_packages:
-        return
-    config = get_config()
-    packages: dict[str, str] = config["packages"]
-    changed_packages = [
-        pkg
-        for pkg in changed_packages
-        if pkg in packages.keys()
-    ]
-    patch_config = config["patch"]
-    for pkg in changed_packages:
-        patch_pkg(pkg, Path(packages[pkg]), patch_config)

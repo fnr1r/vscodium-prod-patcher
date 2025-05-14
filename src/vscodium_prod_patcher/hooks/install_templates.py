@@ -6,7 +6,7 @@ Type = Package
 
 [Action]
 Description = [{name}] VSCodium installation hook
-Exec = /usr/bin/{name} patch
+Exec = /usr/bin/{name} hook patch
 When = PostTransaction
 NeedsTargets
 """

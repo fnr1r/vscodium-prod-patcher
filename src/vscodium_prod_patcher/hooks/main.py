@@ -1,6 +1,6 @@
+from ..shared import err
 from .install import hook_install
 from .patch import hook_patch
-from ..shared import err
 
 
 def hooks_main(args):

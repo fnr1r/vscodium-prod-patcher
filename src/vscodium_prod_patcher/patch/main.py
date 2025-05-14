@@ -2,12 +2,10 @@ from pathlib import Path
 from typing import Any
 
 from ..config.main import get_config
-from ..shared import (
-    DATA_DIR, json_load, pacinfo, json_write,
-)
+from ..shared import DATA_DIR, json_load, json_write, pacinfo
 from .extension_galleries import (
-    EXTENSIONS_OPENVSX_GALLERY, EXTENSIONS_OPENVSX_TRUSTED,
-    EXTENSIONS_MS_GALLERY,
+    EXTENSIONS_MS_GALLERY, EXTENSIONS_OPENVSX_GALLERY,
+    EXTENSIONS_OPENVSX_TRUSTED,
 )
 
 FEATURES_PATCH_PATH = DATA_DIR / "patch/features-patch.json"

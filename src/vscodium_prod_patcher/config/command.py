@@ -1,8 +1,8 @@
+from ..shared import err
 from .auto import try_autoconf
 from .main import save_config
 from .paths import CONFIG_PATH
 from .template import CONFIG_TEMPLATE
-from ..shared import err
 
 
 def config_default():

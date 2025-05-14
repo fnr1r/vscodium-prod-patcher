@@ -1,6 +1,6 @@
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 from typing import Any
 
 from .consts import ENCODING, NAME

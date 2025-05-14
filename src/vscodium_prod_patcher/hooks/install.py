@@ -1,16 +1,13 @@
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from ..config import get_config
 from ..config.auto import try_autoconf
 from ..config.paths import CONFIG_PATH
 from ..consts import NAME
+from ..shared import HOOK_FILE, HOOKS_DIR, eprint, pacinfo, text_file_write
 from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
-from ..shared import (
-    HOOKS_DIR, HOOK_FILE, eprint, pacinfo, text_file_write,
-)
-
 
 USUAL_BIN_PATH = Path("/usr/bin") / NAME
 

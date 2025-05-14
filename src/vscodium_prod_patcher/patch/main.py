@@ -1,14 +1,16 @@
 from pathlib import Path
 from typing import Any
 
+from ..config.main import get_config
+from ..shared import (
+    DATA_DIR, json_load, pacinfo, json_write,
+)
 from .extension_galleries import (
     EXTENSIONS_OPENVSX_GALLERY, EXTENSIONS_OPENVSX_TRUSTED,
     EXTENSIONS_MS_GALLERY,
 )
-from .shared import (
-    DATA_DIR, json_load, pacinfo, json_write,
-)
 
+FEATURES_PATCH_PATH = DATA_DIR / "patch/features-patch.json"
 TDKEY = "linkProtectionTrustedDomains"
 
 
@@ -19,8 +21,7 @@ def patch_features(product: dict[str, Any], config: dict[str, Any]):
         return
     if not extra_features:
         return
-    patch_path = DATA_DIR / "features-patch.json"
-    patch_data = json_load(patch_path)
+    patch_data = json_load(FEATURES_PATCH_PATH)
     for key in patch_data.keys():
         product[key] = patch_data[key]
 
@@ -77,14 +78,27 @@ def patch_marketplace(product: dict[str, Any], config: dict[str, Any]):
         patch_marketplace_trusted_domains(product)
 
 
-def patch_pkg(pkg: str, editor_path: Path, config: dict[str, Any]):
-    pacinfo("Patching", pkg)
+def patch_pkg(editor_path: Path, config: dict[str, Any]):
+    patch_config: dict[str, Any] = config["patch"]
     product_path = editor_path / "resources/app/product.json"
     product = json_load(product_path)
     # Patch 1: Features
-    patch_features(product, config)
+    patch_features(product, patch_config)
     # Patch 2: Data dir
-    patch_data_dir(product, config)
+    patch_data_dir(product, patch_config)
     # Patch 3: Marketplace
-    patch_marketplace(product, config)
+    patch_marketplace(product, patch_config)
     json_write(product_path, product, indent=2)
+
+
+def patch_pkgs(packages: list[str]):
+    config = get_config()
+    conf_packages: dict[str, str] = config["packages"]
+    changed_packages = [
+        pkg
+        for pkg in packages
+        if pkg in conf_packages.keys()
+    ]
+    for pkg in changed_packages:
+        pacinfo("Patching", pkg)
+        patch_pkg(Path(conf_packages[pkg]), config)

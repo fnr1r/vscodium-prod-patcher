@@ -1,8 +1,6 @@
-from pathlib import Path
 import sys
 
-from ..config import get_config
-from ..patch import patch_pkg
+from ..patch import patch_pkgs
 
 
 def hook_patch():
@@ -12,13 +10,4 @@ def hook_patch():
     ]
     if not changed_packages:
         return
-    config = get_config()
-    packages: dict[str, str] = config["packages"]
-    changed_packages = [
-        pkg
-        for pkg in changed_packages
-        if pkg in packages.keys()
-    ]
-    patch_config = config["patch"]
-    for pkg in changed_packages:
-        patch_pkg(pkg, Path(packages[pkg]), patch_config)
+    patch_pkgs(changed_packages)

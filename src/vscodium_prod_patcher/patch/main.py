@@ -77,12 +77,11 @@ def patch_pkg(editor_path: Path, config: dict[str, Any]):
     patch_config: dict[str, Any] = config["patch"]
     product_path = editor_path / "resources/app/product.json"
     product = json_load(product_path)
-    # Patch 1: Features
+
     patch_features(product, patch_config)
-    # Patch 2: Data dir
     patch_data_dir(product, patch_config)
-    # Patch 3: Marketplace
     patch_marketplace(product, patch_config)
+
     json_write(product_path, product, indent=2)
 
 

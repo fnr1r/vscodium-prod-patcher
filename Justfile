@@ -6,6 +6,11 @@ build:
 clean:
     -rm -r dist
 
+clean-all: clean clean-pycache
+
+clean-pycache:
+    -find {{SRC_DIR}} -iname __pycache__ -exec rm -r {} +
+
 check: mypy pylint flake8
 
 alias fmt := flake8

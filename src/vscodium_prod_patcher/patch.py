@@ -9,6 +9,8 @@ from .shared import (
     DATA_DIR, json_load, pacinfo, json_write,
 )
 
+TDKEY = "linkProtectionTrustedDomains"
+
 
 def patch_features(product: dict[str, Any], config: dict[str, Any]):
     try:
@@ -34,7 +36,6 @@ def patch_data_dir(product: dict[str, Any], config: dict[str, Any]):
 
 
 def patch_marketplace_trusted_domains(product: dict[str, Any]):
-    TDKEY = "linkProtectionTrustedDomains"
     cur_domains: list[str]
     try:
         cur_domains = product[TDKEY]

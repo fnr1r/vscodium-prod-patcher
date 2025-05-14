@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 
 from ..config import get_config
+from ..config.auto import try_autoconf
 from ..config.paths import CONFIG_PATH
 from ..consts import NAME
 from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
@@ -22,14 +23,19 @@ def get_bin_path() -> Path:
 
 
 def hook_install():
-    config = get_config()
+    if not CONFIG_PATH.exists():
+        config = try_autoconf()
+        if config is None:
+            sys.exit(1)
+    else:
+        config = get_config()
     packages: dict[str, str] = config["packages"]
     if not packages:
         if HOOK_FILE.exists():
             os.remove(HOOK_FILE)
         pacinfo(
             "No VSCodium package defined.",
-            f"Try to configure {NAME} by creating",
+            f"Try running `{NAME} config packages`",
             CONFIG_PATH,
         )
         return

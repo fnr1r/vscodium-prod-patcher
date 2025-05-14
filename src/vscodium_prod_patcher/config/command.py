@@ -1,3 +1,4 @@
+from .auto import try_autoconf
 from .main import save_config
 from .paths import CONFIG_PATH
 from .template import CONFIG_TEMPLATE
@@ -14,6 +15,8 @@ def config_default():
 # pylint: disable=import-outside-toplevel
 def config_main(args):
     match args.subcommand:
+        case "auto":
+            try_autoconf()
         case "default":
             config_default()
         case "features":

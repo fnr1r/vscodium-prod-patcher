@@ -1,5 +1,4 @@
 from pathlib import Path
-import re
 import sys
 from typing import Any, Optional
 
@@ -12,20 +11,16 @@ except ImportError:
     eprint("TUI configuration requires python-inquirer")
     sys.exit(1)
 
-from ..consts import NAME
-from ..pacman import pacman_list_packages
 from ..tui.friendlybool import (
     FRIENDLY_BOOL_STRS, friendly_bool_to_str, friendly_str_to_bool,
 )
 from .main import get_config, save_config
+from .utils import list_vscodium_packages, try_guess_editor_path
 
 
-def try_guess_editor_path(pkg: str) -> Optional[Path]:
-    for pprefix in ["/usr/share", "/opt"]:
-        prefix = Path(pprefix)
-        path = prefix / pkg
-        if not path.exists():
-            continue
+def try_get_editor_path(pkg: str) -> Optional[Path]:
+    path = try_guess_editor_path(pkg)
+    if path is not None:
         print("Found VSCodium editor path:", path)
         return path
     answers_maybe = inquirer.prompt([inquirer.Path(
@@ -40,13 +35,7 @@ def try_guess_editor_path(pkg: str) -> Optional[Path]:
 
 
 def config_packages():
-    codium = re.compile(r"^(vs)?codium\S*$")
-    packages = pacman_list_packages()
-    maybe_codiums = [
-        pkg
-        for pkg in packages
-        if codium.match(pkg) and pkg != NAME
-    ]
+    maybe_codiums = list_vscodium_packages()
     if len(maybe_codiums) == 0:
         raise RuntimeError("VSCodium is not installed")
     if len(maybe_codiums) == 1:

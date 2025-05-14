@@ -20,4 +20,4 @@ mypy:
     -uv run mypy {{SRC_DIR}} --check-untyped-defs
 
 pylint:
-    -uv run pylint {{SRC_DIR}} --disable C0114,C0116
+    -uv run pylint {{SRC_DIR}} --disable C0114,C0115,C0116

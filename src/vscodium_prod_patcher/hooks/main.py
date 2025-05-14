@@ -3,8 +3,8 @@ from .patch import hook_patch
 from ..shared import err
 
 
-def hooks_main(argv: list[str]):
-    match argv.pop(0):
+def hooks_main(args):
+    match args.name:
         case "install":
             hook_install()
         case "patch":

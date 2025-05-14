@@ -18,17 +18,20 @@ Credit Card: 5809820978480085 Date: 06/21 CVC: 420
 IP address: [::1]
 """
 
-import sys
+from argparse import ArgumentParser
 
 from .hooks.main import hooks_main
 from .shared import err
 
 
 def main():
-    argv = sys.argv.copy()
-    argv.pop(0)
-    match argv.pop(0):
+    parser = ArgumentParser()
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    parser_hook = subparsers.add_parser("hook", help="Run a hook")
+    parser_hook.add_argument("name", help="Hook name")
+    args = parser.parse_args()
+    match args.command:
         case "hook":
-            hooks_main(argv)
+            hooks_main(args)
         case _:
             err("bad command")

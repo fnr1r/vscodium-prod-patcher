@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 
 from ..config.main import get_config
+from ..config.schema import Config, VscPatchConfig
 from ..shared import DATA_DIR, json_load, json_write, pacinfo
 from .extension_galleries import (
     EXTENSIONS_MS_GALLERY, EXTENSIONS_OPENVSX_GALLERY,
@@ -13,11 +14,8 @@ FEATURES_PATCH_PATH = DATA_DIR / "patch/features-patch.json"
 TDKEY = "linkProtectionTrustedDomains"
 
 
-def patch_features(product: dict[str, Any], config: dict[str, Any]):
-    try:
-        extra_features = config["extra_features"]
-    except KeyError:
-        return
+def patch_features(product: dict[str, Any], config: VscPatchConfig):
+    extra_features = config.extra_features
     if not extra_features:
         return
     patch_data = json_load(FEATURES_PATCH_PATH)
@@ -25,11 +23,8 @@ def patch_features(product: dict[str, Any], config: dict[str, Any]):
         product[key] = patch_data[key]
 
 
-def patch_data_dir(product: dict[str, Any], config: dict[str, Any]):
-    try:
-        use_xdg = config["use_xdg"]
-    except KeyError:
-        return
+def patch_data_dir(product: dict[str, Any], config: VscPatchConfig):
+    use_xdg = config.use_xdg
     if not use_xdg:
         return
     product["dataFolderName"] = ".local/share/vscodium"
@@ -51,11 +46,8 @@ def patch_marketplace_trusted_domains(product: dict[str, Any]):
         product[TDKEY] = cur_domains
 
 
-def patch_marketplace(product: dict[str, Any], config: dict[str, Any]):
-    try:
-        marketplace = config["extensions_source"]
-    except KeyError:
-        return
+def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
+    marketplace = config.extensions_source
     gallery = {}
     domains_remove = False
     match marketplace:
@@ -73,8 +65,8 @@ def patch_marketplace(product: dict[str, Any], config: dict[str, Any]):
         patch_marketplace_trusted_domains(product)
 
 
-def patch_pkg(editor_path: Path, config: dict[str, Any]):
-    patch_config: dict[str, Any] = config["patch"]
+def patch_pkg(editor_path: Path, config: Config):
+    patch_config = config.patch
     product_path = editor_path / "resources/app/product.json"
     product = json_load(product_path)
 
@@ -87,7 +79,7 @@ def patch_pkg(editor_path: Path, config: dict[str, Any]):
 
 def patch_pkgs(packages: list[str]):
     config = get_config()
-    conf_packages: dict[str, str] = config["packages"]
+    conf_packages = config.packages
     changed_packages = [
         pkg
         for pkg in packages

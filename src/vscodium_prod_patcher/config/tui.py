@@ -50,47 +50,48 @@ def config_packages():
         assert answers_maybe is not None
         pkg = answers_maybe["vscodiums"]
     assert isinstance(pkg, str)
-    packagesd = {}
+    packagesd: dict[str, Path] = {}
     app_path = try_guess_editor_path(pkg)
     if app_path is None:
         print("Skipping", pkg)
-    packagesd[pkg] = str(app_path)
+        return
+    packagesd[pkg] = app_path
     config = get_config()
-    config["packages"] = packagesd
+    config.packages = packagesd
     save_config(config)
 
 
 def config_features():
     config = get_config()
-    features = config["patch"]
+    features = config.patch
     questions = [
         inquirer.List(
             "extra_features",
             "Do you want to enable extra features that may be required by some"
             + " Micro$oft extensions?",
             FRIENDLY_BOOL_STRS,
-            default=friendly_bool_to_str(features["extra_features"]),
+            default=friendly_bool_to_str(features.extra_features),
         ),
         inquirer.List(
             "extensions_source",
             "Select an extension marketplace / gallery",
             ["openvsx", "microsoft"],
-            default=features["extensions_source"],
+            default=features.extensions_source,
         ),
         inquirer.List(
             "use_xdg",
             "Do you want to change the extension data directory to comply with"
             + " XDG?",
             FRIENDLY_BOOL_STRS,
-            default=friendly_bool_to_str(features["use_xdg"]),
+            default=friendly_bool_to_str(features.use_xdg),
         ),
     ]
     answers_maybe = inquirer.prompt(questions)
     assert answers_maybe is not None
     answers: dict[str, Any] = answers_maybe
     extra_features = friendly_str_to_bool(answers["extra_features"])
-    features["extra_features"] = extra_features
-    features["extensions_source"] = answers["extensions_source"]
-    features["use_xdg"] = friendly_str_to_bool(answers["use_xdg"])
-    config["patch"] = features
+    features.extra_features = extra_features
+    features.extensions_source = answers["extensions_source"]
+    features.use_xdg = friendly_str_to_bool(answers["use_xdg"])
+    config.patch = features
     save_config(config)

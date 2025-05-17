@@ -6,9 +6,9 @@ import toml
 
 from ..consts import ENCODING
 from .paths import CONFIG_DIR, CONFIG_PATH
-from .template import CONFIG_TEMPLATE
+from .schema import Config
 
-CONFIG: Optional[dict[str, Any]] = None
+CONFIG: Optional[Config] = None
 
 EXTENSION_SOURCES = ["openvsx", "microsoft"]
 
@@ -23,14 +23,14 @@ def toml_save(path: Path, obj: Any):
         toml.dump(obj, file)
 
 
-def load_config():
+def load_config() -> Config:
     try:
-        return toml_load(CONFIG_PATH)
+        return Config.from_dict(toml_load(CONFIG_PATH))
     except FileNotFoundError:
-        return CONFIG_TEMPLATE
+        return Config()
 
 
-def get_config() -> dict[str, Any]:
+def get_config() -> Config:
     # pylint: disable=W0603
     global CONFIG
     if CONFIG is None:
@@ -38,7 +38,7 @@ def get_config() -> dict[str, Any]:
     return CONFIG
 
 
-def save_config(config: dict[str, Any]):
+def save_config(config: Config):
     # pylint: disable=W0603
     global CONFIG
     CONFIG = config

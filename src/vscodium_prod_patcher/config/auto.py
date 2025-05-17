@@ -1,9 +1,8 @@
-from copy import deepcopy
-from typing import Any, Optional
+from typing import Optional
 
 from ..shared import eprint
 from .main import save_config
-from .template import CONFIG_TEMPLATE
+from .schema import Config
 from .utils import list_vscodium_packages, try_guess_editor_path
 
 
@@ -15,12 +14,12 @@ def autoerr(*args: object, **kwargs):
     eprint(":: autoconf failed:", *args, **kwargs)
 
 
-def try_autoconf() -> Optional[dict[str, Any]]:
+def try_autoconf() -> Optional[Config]:
     """
     Oh, look! It's AI!!!
     """
-    config = deepcopy(CONFIG_TEMPLATE)
-    conf_packages = config["packages"]
+    config = Config()
+    conf_packages = config.packages
     packages = list_vscodium_packages()
     if not packages:
         autoerr("not VSCodium packages detected")
@@ -35,7 +34,7 @@ def try_autoconf() -> Optional[dict[str, Any]]:
         autoerr("editor path not detected")
         return None
     autoinfo("Editor path:", editor_path)
-    conf_packages[pkg] = str(editor_path)
+    conf_packages[pkg] = editor_path
     autoinfo("Auto-configured with default patch settings")
     save_config(config)
     return config

@@ -2,13 +2,13 @@ from ..shared import err
 from .auto import try_autoconf
 from .main import save_config
 from .paths import CONFIG_PATH
-from .template import CONFIG_TEMPLATE
+from .schema import Config
 
 
 def config_default():
     if CONFIG_PATH.exists():
         err("can't overwrite config with default file")
-    save_config(CONFIG_TEMPLATE)
+    save_config(Config())
 
 
 # This is required because inquirer is optional

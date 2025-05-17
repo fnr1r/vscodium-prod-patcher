@@ -26,7 +26,7 @@ def hook_install():
             sys.exit(1)
     else:
         config = get_config()
-    packages: dict[str, str] = config["packages"]
+    packages = config.packages
     if not packages:
         if HOOK_FILE.exists():
             os.remove(HOOK_FILE)

@@ -43,4 +43,4 @@ def save_config(config: Config):
     global CONFIG
     CONFIG = config
     os.makedirs(CONFIG_DIR, exist_ok=True)
-    toml_save(CONFIG_PATH, config)
+    toml_save(CONFIG_PATH, config.to_dict())

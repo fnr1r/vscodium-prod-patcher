@@ -1,11 +1,18 @@
+from typing import Optional
+
 FRIENDLY_BOOL_STRS = ["no", "yes"]
 
 
-def friendly_bool_to_str(b: bool):
+def friendly_bool_to_str(b: bool) -> str:
     if b:
         return "yes"
-    else:
-        return "no"
+    return "no"
+
+
+def friendly_bool_to_str_opt(b: Optional[bool]) -> Optional[str]:
+    if b is None:
+        return None
+    return friendly_bool_to_str(b)
 
 
 def friendly_str_to_bool(t: str):

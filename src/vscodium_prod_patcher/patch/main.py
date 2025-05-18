@@ -1,9 +1,9 @@
 from contextlib import suppress
-from pathlib import Path
 from typing import Any
 
 from ..config.main import get_config
-from ..config.schema import Config, VscPatchConfig
+from ..config.schema import Config, VscEditorConfig, VscPatchConfig
+from ..config.utils import merge_patch_config
 from ..shared import DATA_DIR, json_load, json_write, pacinfo
 from .extension_galleries import (
     EXTENSIONS_MS_GALLERY, EXTENSIONS_OPENVSX_GALLERY,
@@ -24,10 +24,10 @@ def patch_features(product: dict[str, Any], config: VscPatchConfig):
 
 
 def patch_data_dir(product: dict[str, Any], config: VscPatchConfig):
-    use_xdg = config.use_xdg
-    if not use_xdg:
+    data_dir = config.data_dir
+    if not data_dir:
         return
-    product["dataFolderName"] = ".local/share/vscodium"
+    product["dataFolderName"] = str(data_dir)
 
 
 def patch_marketplace_trusted_domains(product: dict[str, Any]):
@@ -47,7 +47,9 @@ def patch_marketplace_trusted_domains(product: dict[str, Any]):
 
 
 def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
-    marketplace = config.extensions_source
+    marketplace = config.extension_source
+    if marketplace is None:
+        return
     gallery = {}
     domains_remove = False
     match marketplace:
@@ -65,14 +67,14 @@ def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
         patch_marketplace_trusted_domains(product)
 
 
-def patch_pkg(editor_path: Path, config: Config):
-    patch_config = config.patch
-    product_path = editor_path / "resources/app/product.json"
+def patch_pkg(editor: VscEditorConfig, config: Config):
+    patch_config = merge_patch_config(config.patch, editor.config_override)
+    product_path = editor.product_json_path
     product = json_load(product_path)
 
     patch_features(product, patch_config)
-    patch_data_dir(product, patch_config)
     patch_marketplace(product, patch_config)
+    patch_data_dir(product, patch_config)
 
     json_write(product_path, product, indent=2)
 
@@ -87,4 +89,4 @@ def patch_pkgs(packages: list[str]):
     ]
     for pkg in changed_packages:
         pacinfo("Patching", pkg)
-        patch_pkg(Path(conf_packages[pkg]), config)
+        patch_pkg(conf_packages[pkg], config)

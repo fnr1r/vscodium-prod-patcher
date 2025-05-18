@@ -9,10 +9,12 @@ authors = [
 license = "GPL-3.0"
 requires-python = ">=3.13"
 dependencies = [
+    "vscodium-prod-patcher-alpm-ini==0.1.0",
     "mashumaro>=3.15",
     "toml>=0.10.2",
     "tomli>=2.2.1",
     "tomli-w>=1.2.0",
+    "vscodium-prod-patcher-alpm-ini",
 ]
 
 [project.scripts]
@@ -54,3 +56,11 @@ multi_line_output = "VERTICAL_GRID_GROUPED"
 [[tool.mypy.overrides]]
 module = ["inquirer.*"]
 follow_untyped_imports = true
+
+[tool.uv.workspace]
+members = [
+    "src/vscodium_prod_patcher_alpm_ini",
+]
+
+[tool.uv.sources]
+vscodium-prod-patcher-alpm-ini = { workspace = true }

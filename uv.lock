@@ -2,6 +2,12 @@ version = 1
 revision = 2
 requires-python = ">=3.13"
 
+[manifest]
+members = [
+    "vscodium-prod-patcher",
+    "vscodium-prod-patcher-alpm-ini",
+]
+
 [[package]]
 name = "ansicon"
 version = "1.89.0"
@@ -495,6 +501,7 @@ dependencies = [
     { name = "toml" },
     { name = "tomli" },
     { name = "tomli-w" },
+    { name = "vscodium-prod-patcher-alpm-ini" },
 ]
 
 [package.dev-dependencies]
@@ -528,6 +535,7 @@ requires-dist = [
     { name = "toml", specifier = ">=0.10.2" },
     { name = "tomli", specifier = ">=2.2.1" },
     { name = "tomli-w", specifier = ">=1.2.0" },
+    { name = "vscodium-prod-patcher-alpm-ini", editable = "src/vscodium_prod_patcher_alpm_ini" },
 ]
 
 [package.metadata.requires-dev]
@@ -552,6 +560,17 @@ dev = [
     { name = "pylint", specifier = ">=3.3.7" },
     { name = "types-toml", specifier = ">=0.10.8.20240310" },
 ]
+
+[[package]]
+name = "vscodium-prod-patcher-alpm-ini"
+version = "0.1.0"
+source = { editable = "src/vscodium_prod_patcher_alpm_ini" }
+dependencies = [
+    { name = "mashumaro" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mashumaro", specifier = ">=3.15" }]
 
 [[package]]
 name = "wcwidth"

@@ -13,4 +13,4 @@ def hook_patch():
         return
     for pkg in changed_packages:
         backup_editor_data(pkg)
-    patch_pkgs(changed_packages)
+    patch_pkgs(changed_packages, from_backup=True)

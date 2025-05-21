@@ -1,11 +1,12 @@
 from contextlib import suppress
-from typing import Any
+from typing import Any, Optional
 
 from ..config.main import get_config
-from ..config.schema import Config, VscEditorConfig, VscPatchConfig
+from ..config.schema import Config, VscPatchConfig
 from ..config.utils import merge_patch_config
-from ..paths import DATA_DIR
+from ..paths import BACKUPS_DIR, DATA_DIR
 from ..shared import json_load, json_write
+from ..utils.backup import backup_editor_data
 from ..utils.print import pacinfo, pacwarn
 from .extension_galleries import (
     EXTENSIONS_MS_GALLERY, EXTENSIONS_OPENVSX_GALLERY,
@@ -69,19 +70,38 @@ def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
         patch_marketplace_trusted_domains(product)
 
 
-def patch_pkg(editor: VscEditorConfig, config: Config):
+def patch_pkg(
+    pkg: str,
+    config: Optional[Config] = None,
+    from_backup: bool = True,
+):
+    if config is None:
+        config = get_config()
+    editor = config.packages[pkg]
     patch_config = merge_patch_config(config.patch, editor.patch_override)
-    product_path = editor.meta.abs_product_json_path
-    product = json_load(product_path)
 
+    backup_path = BACKUPS_DIR / pkg / "product.json"
+    if not backup_path.exists():
+        backup_editor_data(pkg)
+
+    if from_backup:
+        input_path = backup_path
+    else:
+        input_path = editor.meta.abs_product_json_path
+    product = json_load(input_path)
+
+    pacinfo("Patching", pkg)
     patch_features(product, patch_config)
     patch_marketplace(product, patch_config)
     patch_data_dir(product, patch_config)
 
-    json_write(product_path, product, indent=2)
+    json_write(editor.meta.abs_product_json_path, product, indent=2)
 
 
-def patch_pkgs(packages: list[str]):
+def patch_pkgs(
+    packages: list[str],
+    from_backup: bool = True,
+):
     config = get_config()
     conf_packages = config.packages
     changed_packages = [
@@ -90,5 +110,8 @@ def patch_pkgs(packages: list[str]):
         if pkg in conf_packages
     ]
     for pkg in changed_packages:
-        pacinfo("Patching", pkg)
-        patch_pkg(conf_packages[pkg], config)
+        patch_pkg(
+            pkg,
+            config=config,
+            from_backup=from_backup,
+        )

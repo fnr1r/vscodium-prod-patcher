@@ -19,11 +19,10 @@ IP address: [::1]
 """
 
 from argparse import ArgumentParser
-from pathlib import Path
 
 from .config.command import CONFIG_SUBCMDS, config_main
 from .hooks.main import hooks_main
-from .patch.command import PATCH_SUBCMDS, patch_main
+from .patch.command import patch_main
 from .shared import err
 
 
@@ -48,8 +47,15 @@ def main():
     )
     patch_cmds = [
         subp_patch.add_parser(subcmd)
-        for subcmd in PATCH_SUBCMDS
+        for subcmd in ["backup", "restore"]
     ]
+    patch_apply = subp_patch.add_parser("apply")
+    patch_apply.add_argument(
+        "--from-backup",
+        default=True,
+        type=bool,
+    )
+    patch_cmds.append(patch_apply)
     for patch_cmd in patch_cmds:
         patch_cmd.add_argument(
             "package_name",

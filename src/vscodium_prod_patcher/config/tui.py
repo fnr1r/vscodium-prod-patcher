@@ -13,7 +13,7 @@ except ImportError:
     eprint("TUI configuration requires python-inquirer")
     sys.exit(1)
 
-from ..tui.friendlybool import (
+from ..utils.friendlybool import (
     FRIENDLY_BOOL_STRS, friendly_bool_to_str_opt, friendly_str_to_bool,
 )
 from .main import get_config, save_config

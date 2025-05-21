@@ -25,7 +25,7 @@ class VscEditorMetaConfig:
 @dataclass
 class VscEditorConfig:
     meta: VscEditorMetaConfig
-    config_override: Optional[VscPatchConfig] = field(default=None)
+    patch_override: Optional[VscPatchConfig] = field(default=None)
 
 
 @dataclass

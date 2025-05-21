@@ -69,7 +69,7 @@ def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
 
 
 def patch_pkg(editor: VscEditorConfig, config: Config):
-    patch_config = merge_patch_config(config.patch, editor.config_override)
+    patch_config = merge_patch_config(config.patch, editor.patch_override)
     product_path = editor.meta.abs_product_json_path
     product = json_load(product_path)
 

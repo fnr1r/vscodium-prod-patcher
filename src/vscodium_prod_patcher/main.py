@@ -21,7 +21,7 @@ IP address: [::1]
 from argparse import ArgumentParser
 from pathlib import Path
 
-from .config.command import config_main
+from .config.command import CONFIG_SUBCMDS, config_main
 from .hooks.main import hooks_main
 from .patch.command import patch_main
 from .shared import err
@@ -31,7 +31,12 @@ def main():
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
     parser_config = subparsers.add_parser("config")
-    parser_config.add_argument("subcommand")
+    subp_config = parser_config.add_subparsers(
+        dest="subcommand",
+        required=True,
+    )
+    for subcmd in CONFIG_SUBCMDS:
+        subp_config.add_parser(subcmd)
     parser_hook = subparsers.add_parser("hook", help="Run a hook")
     parser_hook.add_argument("name", help="Hook name")
     parser_patch = subparsers.add_parser(

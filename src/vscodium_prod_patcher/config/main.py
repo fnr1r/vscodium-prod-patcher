@@ -30,10 +30,10 @@ def load_config() -> Config:
         return Config()
 
 
-def get_config() -> Config:
+def get_config(force_reload=True) -> Config:
     # pylint: disable=W0603
     global CONFIG
-    if CONFIG is None:
+    if CONFIG is None or force_reload:
         CONFIG = load_config()
     return CONFIG
 

@@ -3,14 +3,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .consts import ENCODING, NAME
-
-BASE_CONFIG_DIR = Path("/etc")
-
-HOOKS_DIR = BASE_CONFIG_DIR / "pacman.d/hooks"
-HOOK_FILE = HOOKS_DIR / f"98-{NAME}-action.hook"
-
-DATA_DIR = Path(__file__).parent
+from .consts import ENCODING
 
 
 def eprint(*args: object, **kwargs):

@@ -4,7 +4,8 @@ from typing import Any
 from ..config.main import get_config
 from ..config.schema import Config, VscEditorConfig, VscPatchConfig
 from ..config.utils import merge_patch_config
-from ..shared import DATA_DIR, json_load, json_write, pacinfo
+from ..paths import DATA_DIR
+from ..shared import json_load, json_write, pacinfo
 from .extension_galleries import (
     EXTENSIONS_MS_GALLERY, EXTENSIONS_OPENVSX_GALLERY,
     EXTENSIONS_OPENVSX_TRUSTED,
@@ -69,7 +70,7 @@ def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
 
 def patch_pkg(editor: VscEditorConfig, config: Config):
     patch_config = merge_patch_config(config.patch, editor.config_override)
-    product_path = editor.product_json_path
+    product_path = editor.meta.abs_product_json_path
     product = json_load(product_path)
 
     patch_features(product, patch_config)

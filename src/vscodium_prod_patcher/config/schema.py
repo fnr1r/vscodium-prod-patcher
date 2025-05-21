@@ -17,20 +17,15 @@ class VscEditorMetaConfig:
     editor_path: Path
     product_json_path: Path
 
+    @property
+    def abs_product_json_path(self) -> Path:
+        return self.editor_path / self.product_json_path
+
 
 @dataclass
 class VscEditorConfig:
     meta: VscEditorMetaConfig
     config_override: Optional[VscPatchConfig] = field(default=None)
-
-    @property
-    def editor_path(self) -> Path:
-        return self.meta.editor_path
-
-    @property
-    def product_json_path(self) -> Path:
-        meta = self.meta
-        return meta.editor_path / meta.product_json_path
 
 
 @dataclass

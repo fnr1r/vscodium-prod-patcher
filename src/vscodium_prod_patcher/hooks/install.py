@@ -7,7 +7,8 @@ from ..config.auto import try_autoconf
 from ..config.paths import CONFIG_PATH
 from ..config.schema import Config
 from ..consts import NAME
-from ..shared import HOOK_FILE, HOOKS_DIR, eprint, pacinfo, text_file_write
+from ..paths import HOOK_FILE, HOOKS_DIR
+from ..shared import eprint, pacinfo, text_file_write
 from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
 
 USUAL_BIN_PATH = Path("/usr/bin") / NAME

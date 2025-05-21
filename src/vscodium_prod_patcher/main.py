@@ -23,7 +23,7 @@ from pathlib import Path
 
 from .config.command import CONFIG_SUBCMDS, config_main
 from .hooks.main import hooks_main
-from .patch.command import patch_main
+from .patch.command import PATCH_SUBCMDS, patch_main
 from .shared import err
 
 
@@ -42,10 +42,19 @@ def main():
     parser_patch = subparsers.add_parser(
         "patch", help="Manually patch a VSCodium installation",
     )
-    parser_patch.add_argument(
-        "editor_path", type=Path,
-        help="installation path",
+    subp_patch = parser_patch.add_subparsers(
+        dest="subcommand",
+        required=True,
     )
+    patch_cmds = [
+        subp_patch.add_parser(subcmd)
+        for subcmd in PATCH_SUBCMDS
+    ]
+    for patch_cmd in patch_cmds:
+        patch_cmd.add_argument(
+            "package_name",
+            help="package name",
+        )
     args = parser.parse_args()
     match args.command:
         case "config":

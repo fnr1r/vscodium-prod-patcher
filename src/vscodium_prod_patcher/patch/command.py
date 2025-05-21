@@ -1,19 +1,32 @@
-from pathlib import Path
-
+from ..utils.backup import backup_editor_data, restore_editor_data
 from ..config import get_config
-from ..config.schema import VscEditorConfig, VscEditorMetaConfig
-from ..config.utils import try_product_json_path_from_editor_path
 from ..patch import patch_pkg
 from ..shared import err
 
+PATCH_SUBCMDS = ["apply", "backup", "restore"]
+
+
+def patch_apply(package_name: str):
+    config = get_config()
+    editor_config = config.packages[package_name]
+    patch_pkg(editor_config, config)
+
+
+def patch_backup(package_name: str):
+    backup_editor_data(package_name)
+
+
+def patch_restore(package_name: str):
+    restore_editor_data(package_name)
+
 
 def patch_main(args):
-    editor_path: Path = args.editor_path
-    product_json_path = try_product_json_path_from_editor_path(editor_path)
-    if product_json_path is None:
-        err("Failed to detect product.json path")
-        return
-    meta = VscEditorMetaConfig(editor_path, product_json_path)
-    editor_config = VscEditorConfig(meta)
-    config = get_config()
-    patch_pkg(editor_config, config)
+    match args.subcommand:
+        case "apply":
+            patch_apply(args.editor_path)
+        case "backup":
+            patch_apply(args.editor_path)
+        case "restore":
+            patch_restore(args.editor_path)
+        case _:
+            err("bad subcommand")

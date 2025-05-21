@@ -8,7 +8,8 @@ from ..config.paths import CONFIG_PATH
 from ..config.schema import Config
 from ..consts import NAME
 from ..paths import HOOK_FILE, HOOKS_DIR
-from ..shared import eprint, pacinfo, text_file_write
+from ..shared import eprint, text_file_write
+from ..utils.print import pacinfo
 from .install_templates import HOOK_TARGET_TEMPLATE, HOOK_TEMPLATE
 
 USUAL_BIN_PATH = Path("/usr/bin") / NAME

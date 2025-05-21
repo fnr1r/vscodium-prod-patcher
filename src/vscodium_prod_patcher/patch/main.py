@@ -5,7 +5,8 @@ from ..config.main import get_config
 from ..config.schema import Config, VscEditorConfig, VscPatchConfig
 from ..config.utils import merge_patch_config
 from ..paths import DATA_DIR
-from ..shared import json_load, json_write, pacinfo
+from ..shared import json_load, json_write
+from ..utils.print import pacinfo, pacwarn
 from .extension_galleries import (
     EXTENSIONS_MS_GALLERY, EXTENSIONS_OPENVSX_GALLERY,
     EXTENSIONS_OPENVSX_TRUSTED,
@@ -60,7 +61,7 @@ def patch_marketplace(product: dict[str, Any], config: VscPatchConfig):
             gallery = EXTENSIONS_MS_GALLERY
             domains_remove = True
         case _:
-            pacinfo("Invalid marketplace:", marketplace)
+            pacwarn(" ", "Invalid marketplace:", marketplace)
             return
     if gallery:
         product["extensionsGallery"] = gallery

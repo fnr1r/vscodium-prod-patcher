@@ -1,17 +1,15 @@
 from typing import Optional
 
-from ..shared import eprint
+from ..pacman.minipacman import MiniPacman
+from ..utils.print import pacinfo, pacwarn
 from .main import save_config
 from .schema import Config, VscEditorConfig
 from .utils import list_vscodium_packages, try_guess_editor_meta
 
 
-def autoinfo(*args: object, **kwargs):
-    print(":: autoconf:", *args, **kwargs)
-
-
 def autoerr(*args: object, **kwargs):
-    eprint(":: autoconf failed:", *args, **kwargs)
+    print("!!> automatic configuration failed!")
+    pacwarn(*args, **kwargs)
 
 
 def try_autoconf() -> Optional[Config]:
@@ -22,21 +20,28 @@ def try_autoconf() -> Optional[Config]:
     conf_packages = config.packages
     packages = list_vscodium_packages()
     if not packages:
-        autoerr("not VSCodium packages detected")
+        autoerr("no VSCodium packages detected")
         return None
-    if len(packages) > 1:
-        autoerr("too many VSCodium packages detected")
+    pacinfo("VSCodium packages:", len(packages))
+    info = MiniPacman().get_package_info()
+    for pkg in packages:
+        try:
+            pkginfo = info[pkg]
+        except KeyError:
+            pacwarn(" ", pkg, "has no info???")
+            continue
+        pacinfo(pkg, pkginfo.version)
+        meta = try_guess_editor_meta(pkg)
+        if meta is None:
+            pacwarn(" ", "editor metadata not detected")
+            continue
+        pacinfo(" ", "Editor path:", meta.editor_path)
+        pacinfo(" ", "product.json path:", meta.abs_product_json_path)
+        editor_info = VscEditorConfig(meta, None)
+        conf_packages[pkg] = editor_info
+    if not conf_packages:
+        autoerr("no actual VSCodium packages seem to be installed")
         return None
-    pkg = packages.pop()
-    autoinfo("VSCodium package:", pkg)
-    meta = try_guess_editor_meta(pkg)
-    if meta is None:
-        autoerr("editor metadata not detected")
-        return None
-    autoinfo("Editor path:", meta.editor_path)
-    autoinfo("product.json subpath:", meta.product_json_path)
-    editor_info = VscEditorConfig(meta, None)
-    conf_packages[pkg] = editor_info
-    autoinfo("Auto-configured with default patch settings")
+    pacinfo("Auto-configured with default patch settings")
     save_config(config)
     return config

@@ -11,10 +11,6 @@ def eprint(*args: object, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-def pacinfo(*args: object, **kwargs):
-    print("::", *args, **kwargs)
-
-
 def err(*args: object, exit_code=1, **kwargs):
     eprint(*args, **kwargs)
     sys.exit(exit_code)

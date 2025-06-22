@@ -6,6 +6,11 @@ from mashumaro.mixins.toml import DataClassTOMLMixin
 
 
 @dataclass
+class VscDebugConfig:
+    load_and_dump_json_files: Optional[bool] = field(default=None)
+
+
+@dataclass
 class VscPatchConfig:
     data_dir: Optional[Path] = field(default=None)
     extension_source: Optional[str] = field(default=None)
@@ -30,5 +35,6 @@ class VscEditorConfig:
 
 @dataclass
 class Config(DataClassTOMLMixin):
+    debug: Optional[VscDebugConfig] = field(default=None)
     packages: dict[str, VscEditorConfig] = field(default_factory=dict)
     patch: VscPatchConfig = field(default_factory=VscPatchConfig)

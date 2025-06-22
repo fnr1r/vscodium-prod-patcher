@@ -1,1 +1,1 @@
-# vscodium-proc-patcher
+# vscodium-prod-patcher

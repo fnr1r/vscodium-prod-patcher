@@ -23,15 +23,30 @@ class PacmanFiles(DataClassAlpmIniMixin):
     files: list[str]
 
 
+PACMAN_CONF_PATH: Optional[Path] = None
+
+
+def get_pacman_conf_path() -> Path:
+    if PACMAN_CONF_PATH is None:
+        raise RuntimeError("unreachable")
+    return PACMAN_CONF_PATH
+
+
+def set_pacman_conf_path(path: Path):
+    # pylint: disable=global-statement
+    global PACMAN_CONF_PATH
+    PACMAN_CONF_PATH = path
+
+
 class MiniPacman(AbstractSingleton):
     config: PacmanConfig
-    _handle: Handle
+    _handle: Optional[Handle] = None
     _database_path: Optional[Path] = None
     _package_info: Optional[PackageInfoT] = None
     _package_files: dict[str, PacmanFiles]
 
-    def __init__(self, config_path: Optional[Path] = None):
-        self.config = PacmanConfig(conf=config_path)
+    def __init__(self):
+        self.config = PacmanConfig(conf=get_pacman_conf_path())
         self._package_files = {}
 
     @property

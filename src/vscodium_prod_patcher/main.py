@@ -23,6 +23,7 @@ from pathlib import Path
 
 from .config.command import CONFIG_SUBCMDS, config_main
 from .hooks.main import hooks_main
+from .pacman.minipacman import set_pacman_conf_path
 from .patch.command import patch_main
 from .shared import err
 
@@ -68,6 +69,7 @@ def main():
             help="package name",
         )
     args = parser.parse_args()
+    set_pacman_conf_path(args.pacman_config)
     match args.command:
         case "config":
             config_main(args)

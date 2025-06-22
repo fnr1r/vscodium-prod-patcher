@@ -19,6 +19,7 @@ IP address: [::1]
 """
 
 from argparse import ArgumentParser
+from pathlib import Path
 
 from .config.command import CONFIG_SUBCMDS, config_main
 from .hooks.main import hooks_main
@@ -28,6 +29,11 @@ from .shared import err
 
 def main():
     parser = ArgumentParser()
+    parser.add_argument(
+        "--pacman-config",
+        default="/etc/pacman.conf",
+        type=Path,
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
     parser_config = subparsers.add_parser("config")
     subp_config = parser_config.add_subparsers(

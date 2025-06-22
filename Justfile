@@ -30,7 +30,10 @@ isort:
     -uv run isort {{SRC_DIR}}
 
 mypy:
-    -uv run mypy {{SRC_DIR}} --check-untyped-defs
+    -uv run mypy {{SRC_DIR}}
 
 pylint:
-    -uv run pylint {{SRC_DIR}} --disable C0114,C0115,C0116
+    -uv run pylint \
+        --disable C0114,C0115,C0116 \
+        --extension-pkg-allow-list pyalpm \
+        {{SRC_DIR}}

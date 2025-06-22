@@ -382,6 +382,12 @@ wheels = [
 ]
 
 [[package]]
+name = "pyalpm"
+version = "0.10.12"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/33/fb965c94a703b2f62741a52911446fe85e7effc677d54d1a8cd0033f4848/pyalpm-0.10.12.tar.gz", hash = "sha256:8c6cb4bbba819f99fe6c2547f25a861f68905d96729caf1ea15ba6c43d4f1127", size = 52295, upload-time = "2025-05-27T10:33:58.208Z" }
+
+[[package]]
 name = "pycodestyle"
 version = "2.14.0"
 source = { registry = "https://pypi.org/simple" }
@@ -508,6 +514,7 @@ version = "1.0.3"
 source = { editable = "." }
 dependencies = [
     { name = "mashumaro" },
+    { name = "pyalpm" },
     { name = "toml" },
     { name = "tomli" },
     { name = "tomli-w" },
@@ -542,6 +549,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "mashumaro", specifier = ">=3.15" },
+    { name = "pyalpm", specifier = ">=0.10.12" },
     { name = "toml", specifier = ">=0.10.2" },
     { name = "tomli", specifier = ">=2.2.1" },
     { name = "tomli-w", specifier = ">=1.2.0" },

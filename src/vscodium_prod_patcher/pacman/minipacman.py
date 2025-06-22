@@ -1,7 +1,9 @@
-from configparser import ConfigParser, NoOptionError
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
+
+from pyalpm import Handle
+from pycman.config import PacmanConfig
 
 from ..consts import ENCODING
 from ..utils.singleton import AbstractSingleton
@@ -22,40 +24,27 @@ class PacmanFiles(DataClassAlpmIniMixin):
 
 
 class MiniPacman(AbstractSingleton):
-    config: ConfigParser
+    config: PacmanConfig
+    _handle: Handle
     _database_path: Optional[Path] = None
     _package_info: Optional[PackageInfoT] = None
     _package_files: dict[str, PacmanFiles]
 
-    def __init__(self):
-        self.config = ConfigParser(allow_no_value=True)
-        self.config.read("/etc/pacman.conf")
+    def __init__(self, config_path: Optional[Path] = None):
+        self.config = PacmanConfig(conf=config_path)
         self._package_files = {}
 
-    def get_db_path(self) -> Path:
-        try:
-            db_path = self.config.get("options", "DBPath")
-        except NoOptionError:
-            db_path = "/var/lib/pacman"
-        return Path(db_path)
-
     @property
-    def database_path(self) -> Path:
-        if self._database_path is None:
-            self._database_path = self.get_db_path()
-        return self._database_path
+    def handle(self) -> Handle:
+        if self._handle is None:
+            self._handle = self.config.initialize_alpm()
+        return self._handle
 
     def get_package_info(self) -> PackageInfoT:
-        local_db_path = self.database_path / "local"
-        package_info = {}
-        for filename in local_db_path.iterdir():
-            if not filename.is_dir():
-                continue
-            pkg_desc = filename / "desc"
-            with open(pkg_desc, "rt", encoding=ENCODING) as file:
-                entry = PacmanDesc.from_alpm_ini(file.read())
-            package_info[entry.name] = entry
-        return package_info
+        res: PackageInfoT = {}
+        for pkg in self.handle.get_localdb().pkgcache:
+            res[pkg.name] = PacmanDesc(pkg.name, pkg.version)
+        return res
 
     @property
     def package_info(self) -> PackageInfoT:
@@ -67,7 +56,8 @@ class MiniPacman(AbstractSingleton):
         package_info = self.package_info[name]
         package_version = package_info.version
         package_id = f"{name}-{package_version}"
-        local_db_path = self.database_path / "local"
+        db_path = Path(self.config.options["DBPath"])
+        local_db_path = db_path / "local"
         files_info_path = local_db_path / package_id / "files"
         with open(files_info_path, "rt", encoding=ENCODING) as file:
             files_info = PacmanFiles.from_alpm_ini(file.read())

@@ -15,6 +15,7 @@ dependencies = [
     "tomli>=2.2.1",
     "tomli-w>=1.2.0",
     "vscodium-prod-patcher-alpm-ini",
+    "pyalpm>=0.10.12",
 ]
 
 [project.scripts]
@@ -53,8 +54,12 @@ dev = [
 include_trailing_comma = true
 multi_line_output = "VERTICAL_GRID_GROUPED"
 
+[tool.mypy]
+check_untyped_defs = true
+mypy_path = "typings"
+
 [[tool.mypy.overrides]]
-module = ["inquirer.*"]
+module = ["inquirer.*", "pycman.*"]
 follow_untyped_imports = true
 
 [tool.uv.workspace]

@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Any, Callable, Type, TypeVar
 
 from mashumaro.mixins.dict import DataClassDictMixin
@@ -27,7 +27,6 @@ class DataClassAlpmIniMixin(DataClassDictMixin, ABC):
 
     # NOTE: toml has final, but is overriden by DataClassDictMixin
     @classmethod
-    @abstractmethod
     def from_alpm_ini(
         cls: Type[T],
         data: EncodedData,

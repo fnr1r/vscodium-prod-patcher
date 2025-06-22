@@ -1,6 +1,6 @@
 [project]
 name = "vscodium-prod-patcher"
-version = "1.0.3"
+version = "1.1.0"
 description = "Universal patcher for VSCodium"
 readme = "README.md"
 authors = [
